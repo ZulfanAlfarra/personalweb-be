@@ -3,23 +3,23 @@ package com.zulfan.personal_web.dto;
 import java.time.LocalDateTime;
 
 public class BlogSummaryDto {
-    private int id;
+    private Long id;
     private String title;
     private String description;
     private LocalDateTime createdAt;
 
-    public BlogSummaryDto(int id, String title, String description, LocalDateTime createdAt) {
+    public BlogSummaryDto(Long id, String title, String description, LocalDateTime createdAt) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.createdAt = createdAt;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 public class Subheading {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
     private String subTitle;
     @Column(columnDefinition = "TEXT")
     private String subDescription;
@@ -16,11 +16,11 @@ public class Subheading {
     @JsonBackReference
     private Blog blog;
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

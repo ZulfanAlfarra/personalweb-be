@@ -33,29 +33,35 @@ public class BlogController {
     }
 
     @GetMapping("/{id}")
-    public ApiResponse<Blog> getBlogById(@PathVariable Integer id){
+    public ApiResponse<Blog> getBlogById(@PathVariable Long id){
         Blog blog = blogService.getblogById(id);
         return ApiResponse.success("Success get blog by id", blog);
 //        return ResponseEntity.ok().body(blogService.getblogById(id));
     }
 
     @DeleteMapping("/{id}")
-    public ApiResponse<String> deleteBlogById(@PathVariable Integer id){
+    public ApiResponse<String> deleteBlogById(@PathVariable Long id){
         blogService.deleteBlog(id);
         return ApiResponse.success("Success deleted blog with id " + id, "");
 //        return ResponseEntity.ok().body("Deleted blog successfully");
     }
 
     @PutMapping("/{id}")
-    public ApiResponse<Blog> updateBlog(@PathVariable Integer id, @RequestBody Blog blog){
+    public ApiResponse<Blog> updateBlog(@PathVariable Long id, @RequestBody Blog blog){
         Blog updatedBlog = blogService.updateBlog(id, blog);
         return ApiResponse.success("Success updated blog with id " + id, updatedBlog);
 //        return ResponseEntity.ok().body(blogService.updateBlog(id, blog));
     }
 
-    @GetMapping("/summary")
+    @GetMapping("/summary/home")
     public ApiResponse<List<BlogSummaryDto>> getSummaryBlogs(){
-        List<BlogSummaryDto> summary = blogService.getSummaryBlogs();
-        return ApiResponse.success("Success get summary blogs", summary);
+        List<BlogSummaryDto> summary = blogService.getHomeBlogSummary();
+        return ApiResponse.success("Success get 5 blogs summary", summary);
+    }
+
+    @GetMapping("/summary/blog")
+    public ApiResponse<List<BlogSummaryDto>> getSummaryAllBlogs(){
+        List<BlogSummaryDto> summary = blogService.getAllBlogSummary();
+        return ApiResponse.success("Success get blogs summary", summary);
     }
 }

@@ -5,6 +5,7 @@ import com.zulfan.personal_web.entities.Blog;
 import com.zulfan.personal_web.repositories.BlogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -32,19 +33,25 @@ public class BlogService {
         return blogRepository.findAll();
     }
 
-    public List<BlogSummaryDto> getSummaryBlogs() {
-        return blogRepository.findBlogSummary(PageRequest.of(0, 5));
+    public List<BlogSummaryDto> getHomeBlogSummary() {
+        Pageable pageable = PageRequest.of(0, 5);
+        return blogRepository.findBlogSummary(pageable);
     }
 
-    public Blog getblogById(int id) {
+    public List<BlogSummaryDto> getAllBlogSummary() {
+        Pageable pageable = Pageable.unpaged();
+        return blogRepository.findBlogSummary(pageable);
+    }
+
+    public Blog getblogById(Long id) {
         return blogRepository.findById(id).orElse(null);
     }
 
-    public void deleteBlog(int id) {
+    public void deleteBlog(Long id) {
         blogRepository.deleteById(id);
     }
 
-    public Blog updateBlog(int id, Blog updatedBlog) {
+    public Blog updateBlog(Long id, Blog updatedBlog) {
         Blog existingBlog = blogRepository.findById(id).orElse(null);
 
         if (existingBlog == null) {
