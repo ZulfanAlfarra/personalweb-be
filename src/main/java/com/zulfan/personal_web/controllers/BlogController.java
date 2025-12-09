@@ -5,11 +5,15 @@ import com.zulfan.personal_web.dto.BlogSummaryDto;
 import com.zulfan.personal_web.entities.Blog;
 import com.zulfan.personal_web.services.BlogService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/blogs")
@@ -54,14 +58,53 @@ public class BlogController {
     }
 
     @GetMapping("/summary/home")
-    public ApiResponse<List<BlogSummaryDto>> getSummaryBlogs(){
-        List<BlogSummaryDto> summary = blogService.getHomeBlogSummary();
-        return ApiResponse.success("Success get 5 blogs summary", summary);
+    public ResponseEntity<?> getSummaryBlogs(){
+        Page<BlogSummaryDto> summary = blogService.getHomeBlogSummary();
+        return ResponseEntity.ok(
+                Map.of(
+                        "message", "Success",
+                        "data", summary.getContent(),
+                        "metadata", Map.of(
+                                "totalElements", summary.getTotalElements(),
+                                "totalPages", summary.getTotalPages(),
+                                "pageSize", summary.getSize(),
+                                "currentPage", summary.getNumber()
+                        )
+                )
+        );
     }
 
     @GetMapping("/summary/blog")
-    public ApiResponse<List<BlogSummaryDto>> getSummaryAllBlogs(){
-        List<BlogSummaryDto> summary = blogService.getAllBlogSummary();
-        return ApiResponse.success("Success get blogs summary", summary);
+    public ResponseEntity<?> getSummaryAllBlogs(){
+        Page<BlogSummaryDto> summary = blogService.getAllBlogSummary();
+        return ResponseEntity.ok(
+                Map.of(
+                        "message", "Success",
+                        "data", summary.getContent(),
+                        "metadata", Map.of(
+                                "totalElements", summary.getTotalElements(),
+                                "totalPages", summary.getTotalPages(),
+                                "pageSize", summary.getSize(),
+                                "currentPage", summary.getNumber()
+                        )
+                )
+        );
+    }
+
+    @GetMapping("/summary")
+    public ResponseEntity<?> getPageBlog(@RequestParam(value = "page") int page){
+        Page<BlogSummaryDto> blogs = blogService.getPageBlogSummary(page);
+        return ResponseEntity.ok(
+                Map.of(
+                        "message", "Success",
+                        "data", blogs.getContent(),
+                        "metadata", Map.of(
+                                "totalElements", blogs.getTotalElements(),
+                                "totalPages", blogs.getTotalPages(),
+                                "PageSize", blogs.getSize(),
+                                "currentPage", blogs.getNumber()
+                        )
+                )
+        );
     }
 }
