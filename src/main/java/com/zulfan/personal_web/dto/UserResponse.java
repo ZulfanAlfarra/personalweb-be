@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserResponse {
@@ -18,5 +17,6 @@ public class UserResponse {
     private String username;
     private String email;
     private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
     private List<Account> accounts;
 }

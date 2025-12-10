@@ -33,6 +33,10 @@ public class User {
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
+    @CreationTimestamp
+    @Column(nullable = false)
+    private LocalDateTime updatedAt;
+
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Account> accounts;
 }
