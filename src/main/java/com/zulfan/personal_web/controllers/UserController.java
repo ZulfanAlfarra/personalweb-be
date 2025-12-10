@@ -2,10 +2,9 @@ package com.zulfan.personal_web.controllers;
 
 import com.zulfan.personal_web.dto.UserDto;
 import com.zulfan.personal_web.dto.UserResponse;
-import com.zulfan.personal_web.entities.User;
 import com.zulfan.personal_web.services.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,10 +17,10 @@ public class UserController {
 
     private final UserService userService;
 
-    @PostMapping
-    public ResponseEntity<UserResponse> createNewUser(@RequestBody UserDto userDto){
+    @PostMapping("/register")
+    public ResponseEntity<?> createNewUser(@Valid @RequestBody UserDto userDto){
         UserResponse createdUserDto = userService.createNewUser(userDto);
-        return new ResponseEntity<>(createdUserDto, HttpStatus.CREATED);
+        return ResponseEntity.ok(createdUserDto);
     }
 
     @GetMapping("/{id}")
@@ -29,6 +28,7 @@ public class UserController {
         UserResponse userRes = userService.getUserById(id);
         return ResponseEntity.ok(
                 Map.of(
+                        "status", 200,
                         "message", "success get user with id " + id,
                         "data", userRes
                 )

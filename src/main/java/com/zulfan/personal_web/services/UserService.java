@@ -3,6 +3,7 @@ package com.zulfan.personal_web.services;
 import com.zulfan.personal_web.dto.UserDto;
 import com.zulfan.personal_web.dto.UserResponse;
 import com.zulfan.personal_web.entities.User;
+import com.zulfan.personal_web.exceptions.DuplicateResourceException;
 import com.zulfan.personal_web.exceptions.ResourceNotFoundException;
 import com.zulfan.personal_web.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,12 @@ public class UserService {
     }
 
     public UserResponse createNewUser(UserDto userDto){
+        if(userRepository.existsByEmail(userDto.getEmail())){
+            throw new DuplicateResourceException("email", "Email already exist");
+        }
+        if(userRepository.existsByUsername(userDto.getUsername())){
+            throw new DuplicateResourceException("username","Username already exist");
+        }
         User newUser = modelMapper.map(userDto, User.class);
         User saveUser = userRepository.save(newUser);
         return modelMapper.map(saveUser, UserResponse.class);
