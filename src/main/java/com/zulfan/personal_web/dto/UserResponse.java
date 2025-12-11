@@ -1,15 +1,13 @@
 package com.zulfan.personal_web.dto;
 
-import com.zulfan.personal_web.entities.Account;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.zulfan.personal_web.entities.Wallet;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserResponse {
@@ -18,5 +16,5 @@ public class UserResponse {
     private String email;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private List<Account> accounts;
+    private List<Wallet> wallets;
 }

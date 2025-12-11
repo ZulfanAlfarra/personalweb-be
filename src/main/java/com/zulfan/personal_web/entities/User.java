@@ -1,15 +1,10 @@
 package com.zulfan.personal_web.entities;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
 import java.util.List;
 
 @Getter
@@ -42,5 +37,5 @@ public class User {
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private List<Account> accounts;
+    private List<Wallet> wallets;
 }
