@@ -1,9 +1,12 @@
 package com.zulfan.personal_web.services;
 
-import com.zulfan.personal_web.dto.WalletCreateDto;
+import com.zulfan.personal_web.dto.WalletRequestDto;
+import com.zulfan.personal_web.dto.WalletResponseDto;
 import com.zulfan.personal_web.entities.User;
 import com.zulfan.personal_web.entities.Wallet;
+import com.zulfan.personal_web.exceptions.DuplicateResourceException;
 import com.zulfan.personal_web.exceptions.ResourceNotFoundException;
+import com.zulfan.personal_web.mapper.WalletMapper;
 import com.zulfan.personal_web.repositories.UserRepository;
 import com.zulfan.personal_web.repositories.WalletRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,17 +23,30 @@ public class WalletService {
     private final WalletRepository walletRepository;
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
+    private final WalletMapper walletMapper;
 
-    public Wallet createWallet(Long user_id, WalletCreateDto wallet){
-        Wallet newWallet = modelMapper.map(wallet, Wallet.class);
-        newWallet.setBalance(BigDecimal.ZERO);
-        User user = userRepository.findById(user_id).orElseThrow(() -> new ResourceNotFoundException("User not found with id " + user_id));
-        newWallet.setUser(user);
-        Wallet saved = walletRepository.save(newWallet);
-        return saved;
+//    public Wallet createWallet(Long user_id, WalletRequestDto wallet){
+//        Wallet newWallet = modelMapper.map(wallet, Wallet.class);
+//        newWallet.setBalance(BigDecimal.ZERO);
+//        User user = userRepository.findById(user_id).orElseThrow(() -> new ResourceNotFoundException("User not found with id " + user_id));
+//        newWallet.setUser(user);
+//        Wallet saved = walletRepository.save(newWallet);
+//        return saved;
+//    }
+
+    public WalletResponseDto createWallet(Long user_id, WalletRequestDto dtoReq){
+        if(walletRepository.existsByUserIdAndName(user_id, dtoReq.name())) {
+            throw new DuplicateResourceException("name" ,"Wallet name already exist for this user");
+        }
+
+        User user = userRepository.findById(user_id).orElseThrow(()-> new ResourceNotFoundException("User not found with id " + user_id));
+        Wallet wallet = walletMapper.toEntity(dtoReq);
+        wallet.setUser(user);
+        Wallet saved = walletRepository.save(wallet);
+        return walletMapper.toDtoResponse(saved);
     }
 
-    public List getUserWallets(Long user_id){
+    public List<Wallet> getUserWallets(Long user_id){
         User user = userRepository.findById(user_id).orElseThrow(() -> new ResourceNotFoundException("User not found with id " + user_id));
         List wallets = user.getWallets();
         return wallets;
@@ -40,13 +56,21 @@ public class WalletService {
         walletRepository.deleteById(wallet_id);
     }
 
-    public Wallet updateWallet(Long wallet_id, WalletCreateDto req_wallet){
+    public WalletResponseDto updateWallet(Long wallet_id, WalletRequestDto dtoReq){
         Wallet wallet = walletRepository.findById(wallet_id).orElseThrow(()-> new ResourceNotFoundException("Wallet not found with id " + wallet_id));
-        if (req_wallet.getName() != null){
-            wallet.setName(req_wallet.getName());
+
+        if (dtoReq.name() != null ){
+            String newName = dtoReq.name().trim();
+
+            if(walletRepository.existsByUserIdAndName(wallet.getUser().getId(), newName)){
+                throw new DuplicateResourceException("name", "wallet name already exist for this user");
+            }
+
+            wallet.setName(newName);
+
         }
-        wallet.setUpdatedAt(LocalDateTime.now());
+
         Wallet savedWallet = walletRepository.save(wallet);
-        return wallet;
+        return walletMapper.toDtoResponse(savedWallet);
     }
 }
