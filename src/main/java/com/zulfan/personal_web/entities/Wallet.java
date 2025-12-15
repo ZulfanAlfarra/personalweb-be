@@ -24,7 +24,6 @@ public class Wallet {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId", nullable = false)
-    @JsonBackReference
     private User user;
 
     @Column(nullable = false)

@@ -42,6 +42,7 @@ public class WalletService {
         User user = userRepository.findById(user_id).orElseThrow(()-> new ResourceNotFoundException("User not found with id " + user_id));
         Wallet wallet = walletMapper.toEntity(dtoReq);
         wallet.setUser(user);
+        wallet.setBalance(BigDecimal.ZERO);
         Wallet saved = walletRepository.save(wallet);
         return walletMapper.toDtoResponse(saved);
     }

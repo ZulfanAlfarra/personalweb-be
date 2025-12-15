@@ -3,8 +3,10 @@ package com.zulfan.personal_web.entities;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -32,10 +34,11 @@ public class User {
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
-    @CreationTimestamp
+    @LastModifiedDate
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private List<Wallet> wallets;
+    @Builder.Default
+    private List<Wallet> wallets = new ArrayList<>();
 }

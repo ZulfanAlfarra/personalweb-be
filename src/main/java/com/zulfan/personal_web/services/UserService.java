@@ -1,18 +1,15 @@
 package com.zulfan.personal_web.services;
 
-import com.zulfan.personal_web.dto.UserDto;
-import com.zulfan.personal_web.dto.UserResponse;
+import com.zulfan.personal_web.dto.UserRequestDto;
+import com.zulfan.personal_web.dto.UserResponseDto;
 import com.zulfan.personal_web.entities.User;
 import com.zulfan.personal_web.exceptions.DuplicateResourceException;
 import com.zulfan.personal_web.exceptions.ResourceNotFoundException;
+import com.zulfan.personal_web.mapper.UserMapper;
 import com.zulfan.personal_web.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -20,41 +17,40 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
+    private final UserMapper userMapper;
 
 
-    public UserResponse getUserById(Long id){
+    public UserResponseDto getUserById(Long id){
         User user = userRepository.findById(id).
                 orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
-        return modelMapper.map(user, UserResponse.class);
+        return userMapper.toDtoResponse(user);
     }
 
-    public UserResponse createNewUser(UserDto userDto){
-        if(userRepository.existsByEmail(userDto.getEmail())){
+    public UserResponseDto createNewUser(UserRequestDto userDto){
+        if(userRepository.existsByEmail(userDto.email())){
             throw new DuplicateResourceException("email", "Email already exist");
         }
-        if(userRepository.existsByUsername(userDto.getUsername())){
+        if(userRepository.existsByUsername(userDto.username())){
             throw new DuplicateResourceException("username","Username already exist");
         }
-        User newUser = modelMapper.map(userDto, User.class);
+        User newUser = userMapper.toEntity(userDto);
         User saveUser = userRepository.save(newUser);
-        return modelMapper.map(saveUser, UserResponse.class);
+        return userMapper.toDtoResponse(saveUser);
     }
 
-    public UserResponse updateUser(Long id, UserDto userDto){
+    public UserResponseDto updateUser(Long id, UserRequestDto userDto){
         User user = userRepository.findById(id).
                 orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
-        if(userDto.getUsername() != null){
-            user.setUsername(userDto.getUsername());
+        if(userDto.username() != null){
+            user.setUsername(userDto.username());
         }
 
-        if(userDto.getEmail() != null){
-            user.setEmail(userDto.getEmail());
+        if(userDto.email() != null){
+            user.setEmail(userDto.email());
         }
-
-        user.setUpdatedAt(LocalDateTime.now());
 
         User updatedUser = userRepository.save(user);
-        return modelMapper.map(updatedUser, UserResponse.class);
+        return userMapper.toDtoResponse(updatedUser);
     }
 
     public void deleteUser(Long id){

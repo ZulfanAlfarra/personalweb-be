@@ -1,7 +1,7 @@
 package com.zulfan.personal_web.controllers;
 
-import com.zulfan.personal_web.dto.UserDto;
-import com.zulfan.personal_web.dto.UserResponse;
+import com.zulfan.personal_web.dto.UserRequestDto;
+import com.zulfan.personal_web.dto.UserResponseDto;
 import com.zulfan.personal_web.services.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,14 +18,14 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<?> createNewUser(@Valid @RequestBody UserDto userDto){
-        UserResponse createdUserDto = userService.createNewUser(userDto);
+    public ResponseEntity<UserResponseDto> createNewUser(@Valid @RequestBody UserRequestDto userDto){
+        UserResponseDto createdUserDto = userService.createNewUser(userDto);
         return ResponseEntity.ok(createdUserDto);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Map> getUserById(@PathVariable Long id){
-        UserResponse userRes = userService.getUserById(id);
+        UserResponseDto userRes = userService.getUserById(id);
         return ResponseEntity.ok(
                 Map.of(
                         "status", 200,
@@ -36,8 +36,8 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserResponse> updateUser(@PathVariable Long id, @RequestBody UserDto userDto){
-        UserResponse userUpdated = userService.updateUser(id, userDto);
+    public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long id, @RequestBody UserRequestDto userDto){
+        UserResponseDto userUpdated = userService.updateUser(id, userDto);
         return ResponseEntity.ok(userUpdated);
     }
 

@@ -21,6 +21,8 @@ public class WalletMapper {
     }
 
     public Wallet toEntity(WalletRequestDto dto){
-        return Wallet.builder().name(dto.name()).balance(BigDecimal.ZERO).build();
+        return Wallet.builder()
+                .name(dto.name())
+                .build();
     }
 }
