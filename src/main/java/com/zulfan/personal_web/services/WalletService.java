@@ -47,10 +47,12 @@ public class WalletService {
         return walletMapper.toDtoResponse(saved);
     }
 
-    public List<Wallet> getUserWallets(Long user_id){
+    public List<WalletResponseDto> getUserWallets(Long user_id){
         User user = userRepository.findById(user_id).orElseThrow(() -> new ResourceNotFoundException("User not found with id " + user_id));
-        List wallets = user.getWallets();
-        return wallets;
+        return user.getWallets()
+                .stream()
+                .map(walletMapper::toDtoResponse)
+                .toList();
     }
 
     public void deleteWallet(Long wallet_id){
