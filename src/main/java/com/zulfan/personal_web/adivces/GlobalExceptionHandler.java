@@ -2,13 +2,13 @@ package com.zulfan.personal_web.adivces;
 
 import com.zulfan.personal_web.exceptions.DuplicateResourceException;
 import com.zulfan.personal_web.exceptions.ResourceNotFoundException;
+import com.zulfan.personal_web.exceptions.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.time.LocalDateTime;
 import java.util.*;
 
 @RestControllerAdvice
@@ -56,6 +56,17 @@ public class GlobalExceptionHandler {
                         "status", 400,
                         "message", "Validation error",
                         "errors", errors
+                )
+        );
+    }
+
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<?> handlerBadRequestException(BadRequestException ex){
+        return ResponseEntity.badRequest().body(
+                Map.of(
+                        "status", 400,
+                        "message", ex.getMessage(),
+                        "errors", "bad request"
                 )
         );
     }
