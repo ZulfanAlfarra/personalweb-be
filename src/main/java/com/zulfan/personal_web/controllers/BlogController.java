@@ -23,37 +23,53 @@ public class BlogController {
     BlogService blogService;
 
     @PostMapping
-    public ApiResponse<Blog> createBlog(@RequestBody Blog blog){
+    public ResponseEntity<?> createBlog(@RequestBody Blog blog){
         Blog newBlog = blogService.saveBlog(blog);
-        return ApiResponse.success("Success create blog", newBlog);
+        return ResponseEntity.ok(
+                ApiResponse.success(HttpStatus.CREATED.value(), "Success create blog", newBlog)
+        );
 //        return new ResponseEntity<>(newBlog, HttpStatus.CREATED);
     }
 
     @GetMapping
-    public ApiResponse<List<Blog>> getAllBlog(){
+    public ResponseEntity<?> getAllBlog(){
         List<Blog> allBlogs = blogService.getAllBlogs();
-        return ApiResponse.success("Success get blogs", allBlogs);
+        return ResponseEntity.ok(
+                ApiResponse.success(HttpStatus.OK.value(), "Success get all blog", allBlogs)
+        );
 //        return ResponseEntity.ok().body(blogService.getAllBlogs());
     }
 
+    @GetMapping("/_search")
+    public ResponseEntity<?> searchBlog(@RequestParam String searchText){
+        List<Blog> blogs = blogService.getBlogByCriteria(searchText);
+        return ResponseEntity.ok(
+                ApiResponse.success(HttpStatus.OK.value(), "Found blogs", blogs)
+        );
+    }
+
     @GetMapping("/{id}")
-    public ApiResponse<Blog> getBlogById(@PathVariable Long id){
+    public ResponseEntity<?> getBlogById(@PathVariable Long id){
         Blog blog = blogService.getblogById(id);
-        return ApiResponse.success("Success get blog by id", blog);
+        return ResponseEntity.ok(
+                ApiResponse.success(HttpStatus.OK.value(), "Found blog with id " + id, blog)
+        );
 //        return ResponseEntity.ok().body(blogService.getblogById(id));
     }
 
     @DeleteMapping("/{id}")
-    public ApiResponse<String> deleteBlogById(@PathVariable Long id){
+    public ResponseEntity<Void> deleteBlogById(@PathVariable Long id){
         blogService.deleteBlog(id);
-        return ApiResponse.success("Success deleted blog with id " + id, "");
+        return ResponseEntity.noContent().build();
 //        return ResponseEntity.ok().body("Deleted blog successfully");
     }
 
     @PutMapping("/{id}")
-    public ApiResponse<Blog> updateBlog(@PathVariable Long id, @RequestBody Blog blog){
+    public ResponseEntity<?> updateBlog(@PathVariable Long id, @RequestBody Blog blog){
         Blog updatedBlog = blogService.updateBlog(id, blog);
-        return ApiResponse.success("Success updated blog with id " + id, updatedBlog);
+        return ResponseEntity.ok(
+                ApiResponse.success(HttpStatus.OK.value(), "Success updated blog with id " + id, updatedBlog)
+        );
 //        return ResponseEntity.ok().body(blogService.updateBlog(id, blog));
     }
 

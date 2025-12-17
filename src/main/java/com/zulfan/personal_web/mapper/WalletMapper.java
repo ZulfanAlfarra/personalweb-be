@@ -2,6 +2,7 @@ package com.zulfan.personal_web.mapper;
 
 import com.zulfan.personal_web.dto.WalletRequestDto;
 import com.zulfan.personal_web.dto.WalletResponseDto;
+import com.zulfan.personal_web.dto.WalletSummaryDto;
 import com.zulfan.personal_web.entities.Wallet;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -24,6 +25,14 @@ public class WalletMapper {
                         : wallet.getTransactions().stream().map(transactionMapper::toDtoResponse).toList(),
                 wallet.getCreatedAt(),
                 wallet.getUpdatedAt()
+        );
+    }
+
+    public WalletSummaryDto toDtoSummary(Wallet wallet){
+        return new WalletSummaryDto(
+                wallet.getId(),
+                wallet.getName(),
+                wallet.getBalance()
         );
     }
 

@@ -1,11 +1,13 @@
 package com.zulfan.personal_web.controllers;
 
+import com.zulfan.personal_web.dto.ApiResponse;
 import com.zulfan.personal_web.dto.WalletRequestDto;
 import com.zulfan.personal_web.dto.WalletResponseDto;
 import com.zulfan.personal_web.entities.Wallet;
 import com.zulfan.personal_web.services.WalletService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,20 +21,18 @@ public class WalletController {
     private final WalletService walletService;
 
     @PostMapping("{user_id}/wallet")
-    public ResponseEntity<WalletResponseDto> createWallet(@PathVariable Long user_id, @Valid @RequestBody WalletRequestDto wallet) {
+    public ResponseEntity<?> createWallet(@PathVariable Long user_id, @Valid @RequestBody WalletRequestDto wallet) {
         WalletResponseDto newWallet = walletService.createWallet(user_id, wallet);
-        return ResponseEntity.ok(newWallet);
+        return ResponseEntity.ok(
+                ApiResponse.success(HttpStatus.CREATED.value(), "Succeed create wallet", newWallet)
+        );
     }
 
     @GetMapping("{user_id}/wallet")
-    public ResponseEntity<Map> getUserWallet(@PathVariable Long user_id){
+    public ResponseEntity<?> getUserWallet(@PathVariable Long user_id){
         List wallets = walletService.getUserWallets(user_id);
         return ResponseEntity.ok(
-                Map.of(
-                        "status", 200,
-                        "message", "Succeed get user's wallets with id " + user_id,
-                        "data", wallets
-                        )
+                ApiResponse.success(HttpStatus.OK.value(), "Succeed get user's wallets with id " + user_id, wallets)
         );
     }
 
@@ -43,8 +43,10 @@ public class WalletController {
     }
 
     @PutMapping("{user_id}/wallet/{wallet_id}")
-    public ResponseEntity<WalletResponseDto> updateWallet(@PathVariable Long wallet_id, @Valid @RequestBody WalletRequestDto wallet){
+    public ResponseEntity<?> updateWallet(@PathVariable Long wallet_id, @Valid @RequestBody WalletRequestDto wallet){
         WalletResponseDto updatedWallet = walletService.updateWallet(wallet_id, wallet);
-        return ResponseEntity.ok(updatedWallet);
+        return ResponseEntity.ok(
+                ApiResponse.success(HttpStatus.OK.value(), "Succeed update wallet with id " + wallet_id, updatedWallet)
+        );
     }
 }

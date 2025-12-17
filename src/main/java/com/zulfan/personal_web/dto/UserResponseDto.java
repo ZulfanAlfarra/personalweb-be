@@ -8,5 +8,5 @@ public record UserResponseDto(
         Long id,
         String username,
         String email,
-        List<WalletResponseDto> wallets
+        List<WalletSummaryDto> wallets
 ) {}

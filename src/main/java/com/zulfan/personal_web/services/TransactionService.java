@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -32,9 +33,8 @@ public class TransactionService {
         return transactionMapper.toDtoResponse(saved);
     }
 
-
     @Transactional
-    public TransactionResponseDto incomeTransaction(Long wallet_id, TransactionRequestDto dto){
+    public TransactionResponseDto createTransaction(Long wallet_id, TransactionRequestDto dto){
         if(dto.amount() == null || dto.amount().compareTo(BigDecimal.ZERO) <= 0){
             throw new BadRequestException("Amount must be greater than zero");
         }
@@ -61,5 +61,13 @@ public class TransactionService {
         Transaction saved = transactionRepository.save(transaction);
 
         return transactionMapper.toDtoResponse(saved);
+    }
+
+    public List<TransactionResponseDto> getTransaction(Long wallet_id){
+        Wallet wallet = walletRepository.findById(wallet_id).orElseThrow(() -> new ResourceNotFoundException("Wallet not found with id " + wallet_id));
+        return wallet.getTransactions()
+                .stream()
+                .map(transactionMapper::toDtoResponse)
+                .toList();
     }
 }

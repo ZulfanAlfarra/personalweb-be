@@ -21,7 +21,7 @@ public class UserMapper {
                 user.getEmail(),
                 user.getWallets() == null
                         ? List.of()
-                        : user.getWallets().stream().map(walletMapper::toDtoResponse).toList()
+                        : user.getWallets().stream().map(walletMapper::toDtoSummary).toList()
         );
     }
 

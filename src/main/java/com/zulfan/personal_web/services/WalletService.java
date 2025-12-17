@@ -2,6 +2,7 @@ package com.zulfan.personal_web.services;
 
 import com.zulfan.personal_web.dto.WalletRequestDto;
 import com.zulfan.personal_web.dto.WalletResponseDto;
+import com.zulfan.personal_web.dto.WalletSummaryDto;
 import com.zulfan.personal_web.entities.User;
 import com.zulfan.personal_web.entities.Wallet;
 import com.zulfan.personal_web.exceptions.DuplicateResourceException;
@@ -22,7 +23,6 @@ import java.util.List;
 public class WalletService {
     private final WalletRepository walletRepository;
     private final UserRepository userRepository;
-    private final ModelMapper modelMapper;
     private final WalletMapper walletMapper;
 
 //    public Wallet createWallet(Long user_id, WalletRequestDto wallet){
@@ -47,13 +47,14 @@ public class WalletService {
         return walletMapper.toDtoResponse(saved);
     }
 
-    public List<WalletResponseDto> getUserWallets(Long user_id){
+    public List<WalletSummaryDto> getUserWallets(Long user_id){
         User user = userRepository.findById(user_id).orElseThrow(() -> new ResourceNotFoundException("User not found with id " + user_id));
         return user.getWallets()
                 .stream()
-                .map(walletMapper::toDtoResponse)
+                .map(walletMapper::toDtoSummary)
                 .toList();
     }
+
 
     public void deleteWallet(Long wallet_id){
         walletRepository.deleteById(wallet_id);

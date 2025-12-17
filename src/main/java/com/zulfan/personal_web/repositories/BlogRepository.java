@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface BlogRepository extends JpaRepository<Blog, Long> {
+public interface BlogRepository extends JpaRepository<Blog, Long>, CustomBlogRepository {
     @Query("SELECT new com.zulfan.personal_web.dto.BlogSummaryDto(b.id, b.title, b.description, b.createdAt) FROM Blog b ORDER BY b.createdAt DESC")
     Page<BlogSummaryDto> findBlogSummary(Pageable pageable);
 }

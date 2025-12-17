@@ -49,6 +49,10 @@ public class BlogService {
         return blogRepository.findBlogSummary(pageable);
     }
 
+    public List<Blog> getBlogByCriteria(String criteria){
+        return blogRepository.findBlogByCustomCriteria(criteria);
+    }
+
     public Blog getblogById(Long id) {
         return blogRepository.findById(id).orElse(null);
     }
