@@ -63,7 +63,7 @@ public class TransactionService {
         return transactionMapper.toDtoResponse(saved);
     }
 
-    public List<TransactionResponseDto> getTransaction(Long wallet_id){
+    public List<TransactionResponseDto> getTransactions(Long wallet_id){
         Wallet wallet = walletRepository.findById(wallet_id).orElseThrow(() -> new ResourceNotFoundException("Wallet not found with id " + wallet_id));
         return wallet.getTransactions()
                 .stream()

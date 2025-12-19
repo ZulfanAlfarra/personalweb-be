@@ -29,7 +29,7 @@ public class TransactionController {
 
     @GetMapping("{wallet_id}/transactions")
     public ResponseEntity<?> getWalletTransaction(@PathVariable Long wallet_id){
-        List<TransactionResponseDto> transactions = transactionService.getTransaction(wallet_id);
+        List<TransactionResponseDto> transactions = transactionService.getTransactions(wallet_id);
         return ResponseEntity.ok(
                 ApiResponse.success(HttpStatus.OK.value(), "Succeed get wallet's transactions with id " + wallet_id, transactions)
         );
