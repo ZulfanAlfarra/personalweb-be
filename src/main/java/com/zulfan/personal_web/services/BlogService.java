@@ -23,8 +23,6 @@ public class BlogService {
     }
 
     public Blog saveBlog(Blog blog) {
-        blog.setCreatedAt(LocalDateTime.now());
-        blog.setUpdateAt(LocalDateTime.now());
         blog.getSubheadingList().forEach(s -> s.setBlog(blog));
 
         return blogRepository.save(blog);
@@ -70,7 +68,6 @@ public class BlogService {
 
         existingBlog.setTitle(updatedBlog.getTitle());
         existingBlog.setDescription(updatedBlog.getDescription());
-        existingBlog.setUpdateAt(LocalDateTime.now());
         if (updatedBlog.getSubheadingList() != null) {
             existingBlog.getSubheadingList().clear();
 

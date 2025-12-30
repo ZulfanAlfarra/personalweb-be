@@ -35,4 +35,12 @@ public class TransactionController {
         );
     }
 
+    @PutMapping("{wallet_id}/transactions/{transaction_id}")
+    public ResponseEntity<?> updateTransaction(@PathVariable Long wallet_id, @PathVariable Long transaction_id, @RequestBody TransactionRequestDto dto){
+        TransactionResponseDto transactionUpdate = transactionService.updateTransaction(wallet_id, transaction_id, dto);
+        return ResponseEntity.ok(
+                ApiResponse.success(HttpStatus.OK.value(), "Succed update data transaction with wallet id " + wallet_id + " and transactions id " + transaction_id, transactionUpdate)
+        );
+    }
+
 }

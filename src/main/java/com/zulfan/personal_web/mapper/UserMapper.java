@@ -2,7 +2,6 @@ package com.zulfan.personal_web.mapper;
 
 import com.zulfan.personal_web.dto.UserRequestDto;
 import com.zulfan.personal_web.dto.UserResponseDto;
-import com.zulfan.personal_web.dto.WalletResponseDto;
 import com.zulfan.personal_web.entities.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

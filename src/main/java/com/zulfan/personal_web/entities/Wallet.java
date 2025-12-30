@@ -1,14 +1,12 @@
 package com.zulfan.personal_web.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.data.annotation.LastModifiedDate;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.RelationTargetAuditMode;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -17,14 +15,15 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@EntityListeners(AuditingEntityListener.class)
-public class Wallet {
+@Audited
+public class Wallet extends AuditableEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "userId", nullable = false)
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     private User user;
 
     @Column(nullable = false)
@@ -33,14 +32,12 @@ public class Wallet {
     @Column(nullable = false, precision = 18, scale = 2)
     private BigDecimal balance;
 
-    @CreationTimestamp
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt;
-
-    @LastModifiedDate
-    @Column(nullable = false)
-    private LocalDateTime updatedAt;
-
     @OneToMany(mappedBy = "wallet", fetch = FetchType.LAZY)
     private List<Transaction> transactions;
+
+    @PreUpdate
+    void beforeUpdate(){}
+
+    @PreRemove
+    void beforeRemove(){}
 }

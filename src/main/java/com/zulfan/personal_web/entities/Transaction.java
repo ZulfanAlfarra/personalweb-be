@@ -2,26 +2,25 @@ package com.zulfan.personal_web.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.RelationTargetAuditMode;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 @Entity
 @Setter @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@EntityListeners(AuditingEntityListener.class)
-public class Transaction {
+@Audited
+public class Transaction extends AuditableEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
     @JoinColumn(name = "wallet_id", nullable = false)
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     private Wallet wallet;
 
     @Enumerated(EnumType.STRING)
@@ -37,11 +36,9 @@ public class Transaction {
     @Column(columnDefinition = "text")
     private String description;
 
-    @CreationTimestamp
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt;
+    @PreUpdate
+    void beforeUpdate(){}
 
-    @LastModifiedDate
-    @Column(nullable = false)
-    private LocalDateTime updatedAt;
+    @PreRemove
+    void beforeRemove(){}
 }
