@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1>This page is private</h1>
+    <p>Hello, ~{<th:block th:text="${name}"/>}~</p>
+    <p>You are on the exclusive private page</p>
+    <br>
+
+    <form method="post" action="/logout" th:if="${_csrf != null}">
+        <input name="_csrf" type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+        <button class="btn" type="submit">Log out</button>
+    </form>
+
+</body>
+</html>

@@ -2,7 +2,7 @@ package com.zulfan.personal_web.services;
 
 import com.zulfan.personal_web.dto.UserRequestDto;
 import com.zulfan.personal_web.dto.UserResponseDto;
-import com.zulfan.personal_web.entities.User;
+import com.zulfan.personal_web.entities.UserEntity;
 import com.zulfan.personal_web.exceptions.DuplicateResourceException;
 import com.zulfan.personal_web.exceptions.ResourceNotFoundException;
 import com.zulfan.personal_web.mapper.UserMapper;
@@ -21,7 +21,7 @@ public class UserService {
 
 
     public UserResponseDto getUserById(Long id){
-        User user = userRepository.findById(id).
+        UserEntity user = userRepository.findById(id).
                 orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
         return userMapper.toDtoResponse(user);
     }
@@ -33,13 +33,13 @@ public class UserService {
         if(userRepository.existsByUsername(userDto.username())){
             throw new DuplicateResourceException("username","Username already exist");
         }
-        User newUser = userMapper.toEntity(userDto);
-        User saveUser = userRepository.save(newUser);
+        UserEntity newUser = userMapper.toEntity(userDto);
+        UserEntity saveUser = userRepository.save(newUser);
         return userMapper.toDtoResponse(saveUser);
     }
 
     public UserResponseDto updateUser(Long id, UserRequestDto userDto){
-        User user = userRepository.findById(id).
+        UserEntity user = userRepository.findById(id).
                 orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
         if(userDto.username() != null){
             user.setUsername(userDto.username());
@@ -49,7 +49,7 @@ public class UserService {
             user.setEmail(userDto.email());
         }
 
-        User updatedUser = userRepository.save(user);
+        UserEntity updatedUser = userRepository.save(user);
         return userMapper.toDtoResponse(updatedUser);
     }
 

@@ -3,7 +3,7 @@ package com.zulfan.personal_web.services;
 import com.zulfan.personal_web.dto.*;
 import com.zulfan.personal_web.entities.Transaction;
 import com.zulfan.personal_web.entities.TransactionType;
-import com.zulfan.personal_web.entities.User;
+import com.zulfan.personal_web.entities.UserEntity;
 import com.zulfan.personal_web.entities.Wallet;
 import com.zulfan.personal_web.exceptions.DuplicateResourceException;
 import com.zulfan.personal_web.exceptions.ResourceNotFoundException;
@@ -13,14 +13,11 @@ import com.zulfan.personal_web.repositories.TransactionRepository;
 import com.zulfan.personal_web.repositories.UserRepository;
 import com.zulfan.personal_web.repositories.WalletRepository;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -47,7 +44,7 @@ public class WalletService {
             throw new DuplicateResourceException("name" ,"Wallet name already exist for this user");
         }
 
-        User user = userRepository.findById(user_id).orElseThrow(()-> new ResourceNotFoundException("User not found with id " + user_id));
+        UserEntity user = userRepository.findById(user_id).orElseThrow(()-> new ResourceNotFoundException("User not found with id " + user_id));
         Wallet wallet = walletMapper.toEntity(dtoReq);
         wallet.setUser(user);
         wallet.setBalance(BigDecimal.ZERO);
@@ -56,7 +53,7 @@ public class WalletService {
     }
 
     public List<WalletSummaryDto> getUserWallets(Long user_id){
-        User user = userRepository.findById(user_id).orElseThrow(() -> new ResourceNotFoundException("User not found with id " + user_id));
+        UserEntity user = userRepository.findById(user_id).orElseThrow(() -> new ResourceNotFoundException("User not found with id " + user_id));
         return user.getWallets()
                 .stream()
                 .map(walletMapper::toDtoSummary)

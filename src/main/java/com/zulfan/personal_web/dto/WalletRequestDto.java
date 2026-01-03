@@ -1,6 +1,5 @@
 package com.zulfan.personal_web.dto;
 
-import com.zulfan.personal_web.entities.User;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 

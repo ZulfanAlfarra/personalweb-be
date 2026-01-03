@@ -2,7 +2,7 @@ package com.zulfan.personal_web.mapper;
 
 import com.zulfan.personal_web.dto.UserRequestDto;
 import com.zulfan.personal_web.dto.UserResponseDto;
-import com.zulfan.personal_web.entities.User;
+import com.zulfan.personal_web.entities.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -13,7 +13,7 @@ import java.util.List;
 public class UserMapper {
     private final WalletMapper walletMapper;
 
-    public UserResponseDto toDtoResponse(User user){
+    public UserResponseDto toDtoResponse(UserEntity user){
         return new UserResponseDto(
                 user.getId(),
                 user.getUsername(),
@@ -24,8 +24,8 @@ public class UserMapper {
         );
     }
 
-    public User toEntity(UserRequestDto dto){
-        return User.builder()
+    public UserEntity toEntity(UserRequestDto dto){
+        return UserEntity.builder()
                 .username(dto.username())
                 .email(dto.email())
                 .password(dto.password())
